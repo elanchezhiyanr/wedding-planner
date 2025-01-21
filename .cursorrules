@@ -1,0 +1,3 @@
+Only use the shadcn-nuxt components.
+If the feature is not available in shadcn-nuxt, use the tailwind components.
+For icons, use nuxt-icon.
