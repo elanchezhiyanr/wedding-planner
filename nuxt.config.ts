@@ -14,13 +14,6 @@ export default defineNuxtConfig({
     componentDir: './components/ui'
   },
   supabase: {
-    redirect: true,
-    redirectOptions: {
-      login: '/login',
-      callback: 'redirectTo',
-      exclude: ['/confirm'],
-      cookieRedirect: true,
-    },
-    cookieName: 'supabase'
+    redirect: false
   }
 })

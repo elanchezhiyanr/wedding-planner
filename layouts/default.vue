@@ -1,58 +1,44 @@
 <template>
   <div class="min-h-screen flex">
-    <!-- Floating Menu Button -->
-    <Button 
-      variant="ghost" 
-      size="icon" 
-      class="fixed left-4 top-4 z-50 lg:hidden bg-white shadow-md rounded-md hover:bg-gray-100"
-      @click="isOpen = true"
+    <!-- Collapsible Sidebar -->
+    <aside 
+      class="fixed inset-y-0 left-0 z-30 border-r bg-white transition-all duration-300 flex"
+      :class="[isOpen ? 'w-64' : 'w-[72px]']"
     >
-      <Menu class="h-6 w-6" />
-    </Button>
-
-    <!-- Desktop Sidebar -->
-    <aside class="fixed inset-y-0 left-0 z-30 w-64 border-r bg-white hidden lg:block">
-      <div class="p-6">
-        <h2 class="text-xl font-semibold mb-6">Wedding Planner</h2>
+      <div class="flex-1 p-4">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold overflow-hidden whitespace-nowrap transition-all duration-300"
+              :class="{ 'opacity-0 w-0': !isOpen }">
+            Wedding Planner
+          </h2>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            class="shrink-0"
+            @click="isOpen = !isOpen"
+          >
+            <Icon :name="isOpen ? 'lucide:chevron-left' : 'lucide:chevron-right'" class="h-5 w-5" />
+          </Button>
+        </div>
         <nav class="space-y-2">
           <Button v-for="item in navItems" 
                   :key="item.path" 
                   variant="ghost" 
-                  class="w-full justify-start text-base font-medium"
-                  :class="{ 'bg-gray-100': route.path === item.path }"
+                  class="w-full justify-start text-base font-medium transition-all duration-300"
+                  :class="[
+                    { 'bg-gray-100': route.path === item.path },
+                    isOpen ? 'px-4' : 'px-0 justify-center'
+                  ]"
                   @click="navigateTo(item.path)">
-            <component :is="item.icon" class="mr-3 h-5 w-5" />
-            {{ item.label }}
+            <component :is="item.icon" :class="['h-5 w-5', isOpen ? 'mr-3' : '']" />
+            <span :class="{ 'hidden': !isOpen }">{{ item.label }}</span>
           </Button>
         </nav>
       </div>
     </aside>
 
-    <!-- Mobile Sidebar Sheet -->
-    <Sheet :open="isOpen" @update:open="isOpen = $event">
-      <SheetContent side="left" class="w-64 p-0 bg-white">
-        <div class="p-6">
-          <h2 class="text-xl font-semibold mb-6">Wedding Planner</h2>
-          <nav class="space-y-2">
-            <Button v-for="item in navItems" 
-                    :key="item.path" 
-                    variant="ghost" 
-                    class="w-full justify-start text-base font-medium"
-                    :class="{ 'bg-gray-100': route.path === item.path }"
-                    @click="() => {
-                      navigateTo(item.path);
-                      isOpen = false;
-                    }">
-              <component :is="item.icon" class="mr-3 h-5 w-5" />
-              {{ item.label }}
-            </Button>
-          </nav>
-        </div>
-      </SheetContent>
-    </Sheet>
-
     <!-- Main Content -->
-    <main class="flex-1 lg:pl-64">
+    <main :class="['flex-1 transition-all duration-300', isOpen ? 'pl-64' : 'pl-[72px]']">
       <div class="h-full p-6">
         <slot />
       </div>
@@ -64,7 +50,6 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { 
   Home,
   Users,
@@ -76,7 +61,7 @@ import {
 } from 'lucide-vue-next'
 
 const route = useRoute()
-const isOpen = ref(false)
+const isOpen = ref(true) // Set to true by default
 
 const navItems = [
   { path: '/', label: 'Overview', icon: Home },
@@ -86,4 +71,8 @@ const navItems = [
   { path: '/budget', label: 'Budget Management', icon: DollarSign },
   { path: '/events', label: 'Event Management', icon: Calendar },
 ]
-</script> 
+</script>
+
+<style scoped>
+/* Remove the slide transition since we're not using v-if anymore */
+</style> 
