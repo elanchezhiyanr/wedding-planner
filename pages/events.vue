@@ -2,7 +2,7 @@
   <div class="p-6">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">Event Management</h1>
-      <Button>Add Event</Button>
+      <Button @click="showAddEvent = true">Add Event</Button>
     </div>
     
     <div class="grid gap-4">
@@ -86,9 +86,22 @@
         </div>
       </div>
     </div>
+
+    <AddEventDialog 
+      v-model:open="showAddEvent"
+      @submit="handleAddEvent"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { Button } from '@/components/ui/button'
+import AddEventDialog from '@/components/AddEventDialog'
+
+const showAddEvent = ref(false)
+
+const handleAddEvent = (eventData: any) => {
+  // Handle the event data submission logic here
+}
 </script> 
