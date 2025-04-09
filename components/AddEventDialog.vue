@@ -1,86 +1,107 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-import { useForm } from 'vee-validate'
-import * as z from 'zod'
+import { Textarea } from '@/components/ui/textarea'
 
 const props = defineProps<{
   open: boolean
 }>()
 
-const emits = defineEmits<{
+const emit = defineEmits<{
   'update:open': [value: boolean]
   'submit': [data: any]
 }>()
 
-const formSchema = z.object({
-  eventName: z.string().min(1, 'Event name is required'),
-  eventDate: z.string().min(1, 'Event date is required'),
-  eventTime: z.string().min(1, 'Event time is required')
+const formData = ref({
+  event_name: '',
+  event_date: '',
+  event_time: '',
+  location: '',
+  description: ''
 })
 
-const form = useForm({
-  validationSchema: formSchema,
-  initialValues: {
-    eventName: '',
-    eventDate: '',
-    eventTime: ''
+const handleSubmit = async () => {
+  try {
+    const { data: eventData } = await useFetch('/api/events', {
+      method: 'POST',
+      body: {
+        ...formData.value,
+        status_id: 1 // Active status
+      }
+    })
+
+    emit('update:open', false)
+    emit('submit', eventData.value)
+  } catch (error) {
+    console.error('Error adding event:', error)
   }
-})
-
-const handleSubmit = form.handleSubmit((values) => {
-  emits('submit', values)
-  form.resetForm()
-  emits('update:open', false)
-})
+}
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="(value) => emits('update:open', value)">
+  <Dialog :open="open" @update:open="$emit('update:open', $event)">
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Add New Event</DialogTitle>
+        <DialogTitle>Add Event</DialogTitle>
+        <DialogDescription>
+          Add a new event to your wedding timeline
+        </DialogDescription>
       </DialogHeader>
-      <Form @submit="handleSubmit">
+      <form @submit.prevent="handleSubmit">
         <div class="grid gap-4 py-4">
-          <FormField name="eventName" v-slot="{ componentField, error }">
-            <FormItem>
-              <FormLabel>Event Name</FormLabel>
-              <FormControl>
-                <Input v-bind="componentField" placeholder="Event name" />
-              </FormControl>
-              <FormMessage>{{ error }}</FormMessage>
-            </FormItem>
-          </FormField>
+          <div class="grid gap-2">
+            <Label for="event_name">Event Name</Label>
+            <Input
+              id="event_name"
+              v-model="formData.event_name"
+              placeholder="Enter event name"
+            />
+          </div>
 
-          <FormField name="eventDate" v-slot="{ componentField, error }">
-            <FormItem>
-              <FormLabel>Event Date</FormLabel>
-              <FormControl>
-                <Input v-bind="componentField" type="date" placeholder="Event date" />
-              </FormControl>
-              <FormMessage>{{ error }}</FormMessage>
-            </FormItem>
-          </FormField>
+          <div class="grid gap-2">
+            <Label for="event_date">Date</Label>
+            <Input
+              id="event_date"
+              v-model="formData.event_date"
+              type="date"
+            />
+          </div>
 
-          <FormField name="eventTime" v-slot="{ componentField, error }">
-            <FormItem>
-              <FormLabel>Event Time</FormLabel>
-              <FormControl>
-                <Input v-bind="componentField" type="time" placeholder="Event time" />
-              </FormControl>
-              <FormMessage>{{ error }}</FormMessage>
-            </FormItem>
-          </FormField>
+          <div class="grid gap-2">
+            <Label for="event_time">Time</Label>
+            <Input
+              id="event_time"
+              v-model="formData.event_time"
+              type="time"
+            />
+          </div>
+
+          <div class="grid gap-2">
+            <Label for="location">Location</Label>
+            <Input
+              id="location"
+              v-model="formData.location"
+              placeholder="Enter location"
+            />
+          </div>
+
+          <div class="grid gap-2">
+            <Label for="description">Description</Label>
+            <Textarea
+              id="description"
+              v-model="formData.description"
+              placeholder="Enter event description"
+            />
+          </div>
         </div>
+
         <DialogFooter>
           <Button type="submit">Add Event</Button>
         </DialogFooter>
-      </Form>
+      </form>
     </DialogContent>
   </Dialog>
 </template>
