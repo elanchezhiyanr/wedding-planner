@@ -1,20 +1,3 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { Card } from '@/components/ui/card'
-
-// Placeholder data
-const weddingDetails = ref({
-  brideImage: null,
-  groomImage: null,
-  brideName: '',
-  groomName: '',
-  location: '',
-  weddingDate: null
-})
-
-const placeholderImage = '/images/couple-placeholder.png' // We'll add this image later
-</script>
-
 <template>
   <div class="container mx-auto p-6">
     <div class="grid grid-cols-1 gap-6">

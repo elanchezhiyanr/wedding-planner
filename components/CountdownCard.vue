@@ -31,7 +31,7 @@ onUnmounted(() => {
 <template>
   <Card>
     <CardHeader>
-      <CardTitle class="text-xl font-semibold text-center">Time to Argument</CardTitle>
+      <CardTitle class="text-xl font-semibold text-center">Time to Wedding</CardTitle>
     </CardHeader>
     <CardContent>
       <div class="flex justify-center items-center space-x-4">

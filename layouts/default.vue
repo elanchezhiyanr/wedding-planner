@@ -64,7 +64,7 @@ const route = useRoute()
 const isOpen = ref(true) // Set to true by default
 
 const navItems = [
-  { path: '/', label: 'Home', icon: Home },
+  { path: '/home', label: 'Home', icon: Home },
   { path: '/guests', label: 'Guests', icon: Users },
   { path: '/tasks', label: 'Tasks', icon: CheckSquare },
   { path: '/vendors', label: 'Vendors', icon: Store },
