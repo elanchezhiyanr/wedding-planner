@@ -15,5 +15,12 @@ export default defineNuxtConfig({
   },
   supabase: {
     redirect: false
+  },
+  nitro: {
+    preset: "cloudflare_module",
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true
+    }
   }
 })
