@@ -6,3 +6,4 @@ export * from './guests';
 export * from './groupEvents';
 export * from './guestEvents';
 export * from './relations';
+export * from './earlyAdopters';

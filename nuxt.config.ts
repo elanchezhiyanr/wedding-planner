@@ -15,5 +15,10 @@ export default defineNuxtConfig({
   },
   supabase: {
     redirect: false
+  },
+  content: {
+    preview: {
+      api: 'https://api.nuxt.studio'
+    }
   }
 })
